@@ -1,5 +1,7 @@
 # DevOps Test App
 
+public ip address : http://51.20.252.1/
+
 A full-stack CRUD application built with **Laravel 11** (REST API) and **React + TypeScript** (frontend), fully containerised with Docker Compose.
 
 ---
