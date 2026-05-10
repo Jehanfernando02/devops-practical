@@ -34,7 +34,7 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
             args:
-                VITE_API_URL: ${VITE_API_URL:-https://51.20.252.1/api}
+                VITE_API_URL: ${VITE_API_URL:-http://51.20.252.1/api}
         container_name: devops-test-frontend
         restart: unless-stopped
         expose:
