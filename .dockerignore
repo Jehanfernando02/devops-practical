@@ -11,7 +11,9 @@ storage/framework/views/*
 frontend/node_modules
 frontend/dist
 
-
+# Jenkins stack lives in this repo but must NOT enter the app image build
+# context (it contains root-owned certbot data that breaks `docker build`).
+jenkins
 
 # Local env files — image gets env at runtime
 .env
