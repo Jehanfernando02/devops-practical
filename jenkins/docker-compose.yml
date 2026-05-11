@@ -1,0 +1,64 @@
+## Jenkins stack — runs independently of the main app stack so the CI/CD
+## server is never restarted by an app deploy.
+##
+## Run with:
+##   docker compose -f jenkins/docker-compose.yml up -d --build
+
+services:
+    jenkins:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: jenkins
+        restart: unless-stopped
+        environment:
+            JENKINS_OPTS: "--prefix=/"
+            JAVA_OPTS: "-Djenkins.install.runSetupWizard=true"
+        volumes:
+            - jenkins-data:/var/jenkins_home
+            - /var/run/docker.sock:/var/run/docker.sock
+            # Mount the deployed app so the pipeline's Deploy stage can
+            # `cd /home/ubuntu/devops-practical && git pull && docker compose ...`
+            - /home/ubuntu/devops-practical:/home/ubuntu/devops-practical
+        expose:
+            - "8080"
+        networks:
+            - jenkins-network
+
+    nginx:
+        image: nginx:alpine
+        container_name: jenkins-nginx
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+            - certbot-webroot:/var/www/certbot:ro
+            - certbot-etc:/etc/letsencrypt:ro
+        depends_on:
+            - jenkins
+        networks:
+            - jenkins-network
+
+    certbot:
+        image: certbot/certbot:latest
+        container_name: jenkins-certbot
+        volumes:
+            - certbot-webroot:/var/www/certbot
+            - certbot-etc:/etc/letsencrypt
+        entrypoint: /bin/sh
+        command: -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done"
+        depends_on:
+            - nginx
+        networks:
+            - jenkins-network
+
+volumes:
+    jenkins-data:
+    certbot-webroot:
+    certbot-etc:
+
+networks:
+    jenkins-network:
+        driver: bridge
