@@ -1,0 +1,19 @@
+.git
+.idea
+node_modules
+vendor
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+
+# Frontend build artifacts — frontend has its own Dockerfile + context
+frontend/node_modules
+frontend/dist
+
+
+
+# Local env files — image gets env at runtime
+.env
+.env.docker
+.env.production
