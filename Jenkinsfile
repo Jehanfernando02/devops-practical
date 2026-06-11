@@ -58,13 +58,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "🚀 Deploying to production (commit: ${env.APP_VERSION})..."
-                withCredentials([gitUsernamePassword(credentialsId: 'github-creds', gitToolName: 'Default')]) {
-                    sh '''
-                        cd $DEPLOY_DIR
-                        git fetch origin master
-                        git reset --hard origin/master
-                    '''
-                }
+                sh '''
+                    cd $DEPLOY_DIR
+                    git fetch origin main
+                    git reset --hard origin/main
+                '''
                 sh '''
                     cd $DEPLOY_DIR
 
