@@ -7,16 +7,16 @@ import { useState, useEffect } from 'react'
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+
+  // close mobile nav on route change (kept for future mobile menu)
+  void location
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  useEffect(() => setMobileOpen(false), [location])
 
   return (
     <header

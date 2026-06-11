@@ -10,20 +10,21 @@ const HeroMetric = ({ icon, label, value, color }: { icon: string; label: string
   </div>
 )
 
+const TERMINAL_LINES = [
+  '$ docker compose up -d',
+  '✔ Container devops-test-db     Started',
+  '✔ Container devops-test-app    Started',
+  '✔ Container devops-test-nginx  Started',
+  '✔ Container devops-test-frontend Started',
+  '$ curl http://localhost/api/posts',
+  '→ HTTP 200 OK  [{"id":1,"title":"Hello World"...}]',
+]
+
 const TerminalHeader = () => {
   const [line, setLine] = useState(0)
-  const lines = [
-    '$ docker compose up -d',
-    '✔ Container devops-test-db     Started',
-    '✔ Container devops-test-app    Started',
-    '✔ Container devops-test-nginx  Started',
-    '✔ Container devops-test-frontend Started',
-    '$ curl http://localhost/api/posts',
-    '→ HTTP 200 OK  [{"id":1,"title":"Hello World"...}]',
-  ]
 
   useEffect(() => {
-    if (line >= lines.length) return
+    if (line >= TERMINAL_LINES.length) return
     const t = setTimeout(() => setLine(l => l + 1), 600)
     return () => clearTimeout(t)
   }, [line])
@@ -39,7 +40,7 @@ const TerminalHeader = () => {
         </span>
       </div>
       <div className="terminal-body" style={{ padding: '16px 20px', minHeight: 160, background: '#060d1a' }}>
-        {lines.slice(0, line).map((l, i) => (
+        {TERMINAL_LINES.slice(0, line).map((l, i) => (
           <div key={i} style={{
             fontFamily: 'JetBrains Mono, monospace', fontSize: 12, lineHeight: 2,
             color: l.startsWith('$') ? '#00d4ff' : l.startsWith('✔') ? '#10b981' : l.startsWith('→') ? '#f59e0b' : '#94a3b8',
@@ -47,7 +48,7 @@ const TerminalHeader = () => {
             {l}
           </div>
         ))}
-        {line < lines.length && (
+        {line < TERMINAL_LINES.length && (
           <span className="animate-blink" style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00d4ff', fontSize: 12 }}>▊</span>
         )}
       </div>
@@ -106,7 +107,9 @@ export default function PostsList() {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    void (async () => { await load() })()
+  }, [])
 
   const handleDelete = async (id: number) => {
     if (!confirm('Delete this post?')) return

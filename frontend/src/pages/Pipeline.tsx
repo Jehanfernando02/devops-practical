@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 type Stage = {
   name: string
@@ -117,15 +117,11 @@ const InfraCard = ({ icon, title, items, color }: { icon: string, title: string,
   </div>
 )
 
+// Stable build number — avoids calling Math.random() impure function during render
+const BUILD_NUMBER = Math.floor(Math.random() * 50) + 80
+
 export default function Pipeline() {
   const [selectedStage, setSelectedStage] = useState<Stage>(pipelineStages[0])
-  const [elapsed, setElapsed] = useState(0)
-
-  useEffect(() => {
-    const t = setInterval(() => setElapsed(e => e + 1), 1000)
-    return () => clearInterval(t)
-  }, [])
-
   const totalDuration = pipelineStages.reduce((sum, s) => sum + parseInt(s.duration), 0)
 
   return (
@@ -141,7 +137,7 @@ export default function Pipeline() {
             <div>
               <div className="status-badge status-success" style={{ marginBottom: 16 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
-                Last build: SUCCESS · #{Math.floor(Math.random() * 50) + 80}
+                Last build: SUCCESS · #{BUILD_NUMBER}
               </div>
               <h1 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 900, marginBottom: 10 }}>
                 <span className="gradient-text">CI/CD</span> Pipeline

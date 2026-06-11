@@ -118,7 +118,6 @@ const skillCategories = [
 
 export default function Portfolio() {
   const [activeFilter, setActiveFilter] = useState('All')
-  const filters = ['All', 'DevOps · CI/CD · Docker', 'Full Stack · Healthcare', 'AI · Multi-Agent · RAG', 'Mobile · AWS · Cloud', 'Backend · Real-time', 'Full Stack · E-Commerce']
 
   const filtered = activeFilter === 'All'
     ? projects
