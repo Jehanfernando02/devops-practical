@@ -43,7 +43,7 @@ def check_health(url: str, timeout: int = 5) -> dict:
     start = time.monotonic()
     result = {
         "url":          url,
-        "timestamp":    datetime.datetime.utcnow().isoformat() + "Z",
+        "timestamp":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "http_status":  None,
         "response_ms":  None,
         "healthy":      False,
