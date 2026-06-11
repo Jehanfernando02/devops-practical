@@ -34,38 +34,123 @@ export default function PostForm({ initial, submitLabel, onSubmit }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Title field */}
       <div>
-        <label className="block text-sm font-medium mb-1">Title</label>
+        <label style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)',
+          marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em',
+          fontFamily: 'JetBrains Mono, monospace',
+        }}>
+          <span style={{ color: 'var(--accent-cyan)' }}>▸</span> TITLE
+        </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full border rounded px-3 py-2"
+          placeholder="Enter post title..."
+          className="input-field"
+          style={{ fontSize: 15 }}
+          disabled={saving}
         />
         {errors.title?.map((m) => (
-          <p key={m} className="text-red-600 text-sm mt-1">{m}</p>
+          <p key={m} style={{
+            color: '#ef4444', fontSize: 12, marginTop: 8,
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span>⚠</span> {m}
+          </p>
         ))}
       </div>
+
+      {/* Body field */}
       <div>
-        <label className="block text-sm font-medium mb-1">Body</label>
+        <label style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)',
+          marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em',
+          fontFamily: 'JetBrains Mono, monospace',
+        }}>
+          <span style={{ color: 'var(--accent-cyan)' }}>▸</span> BODY
+        </label>
         <textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
-          rows={6}
-          className="w-full border rounded px-3 py-2"
+          rows={8}
+          placeholder="Write your post content here..."
+          className="input-field"
+          style={{ resize: 'vertical', fontSize: 15, lineHeight: 1.7 }}
+          disabled={saving}
         />
         {errors.body?.map((m) => (
-          <p key={m} className="text-red-600 text-sm mt-1">{m}</p>
+          <p key={m} style={{
+            color: '#ef4444', fontSize: 12, marginTop: 8,
+            display: 'flex', alignItems: 'center', gap: 6,
+          }}>
+            <span>⚠</span> {m}
+          </p>
         ))}
       </div>
-      <button
-        type="submit"
-        disabled={saving}
-        className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-4 py-2 rounded"
-      >
-        {saving ? 'Saving...' : submitLabel}
-      </button>
+
+      {/* Payload preview */}
+      <div style={{
+        background: 'rgba(0,0,0,0.3)',
+        border: '1px solid rgba(0,212,255,0.15)',
+        borderRadius: 10, padding: 16,
+      }}>
+        <div style={{
+          fontSize: 11, color: 'var(--accent-cyan)', marginBottom: 8,
+          fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.1em',
+        }}>
+          POST /api/posts — Request Preview
+        </div>
+        <pre style={{
+          fontFamily: 'JetBrains Mono, monospace',
+          fontSize: 12, color: '#94a3b8', lineHeight: 1.8, overflow: 'auto',
+        }}>
+          {JSON.stringify({ title: title || '...', body: body || '...' }, null, 2)}
+        </pre>
+      </div>
+
+      {/* Submit button */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <button
+          type="submit"
+          disabled={saving}
+          className="btn-primary"
+          style={{ opacity: saving ? 0.7 : 1 }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', gap: 8, position: 'relative', zIndex: 1 }}>
+            {saving ? (
+              <>
+                <span style={{
+                  width: 14, height: 14, borderRadius: '50%',
+                  border: '2px solid rgba(255,255,255,0.3)',
+                  borderTopColor: 'white',
+                  display: 'inline-block',
+                  animation: 'spin-slow 0.8s linear infinite',
+                }} />
+                Saving...
+              </>
+            ) : (
+              <>{submitLabel}</>
+            )}
+          </span>
+        </button>
+        {saving && (
+          <span style={{ color: 'var(--text-muted)', fontSize: 12, fontFamily: 'JetBrains Mono, monospace' }}>
+            Sending to API...
+          </span>
+        )}
+      </div>
+
+      <style>{`
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </form>
   )
 }
