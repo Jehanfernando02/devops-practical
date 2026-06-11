@@ -15,7 +15,7 @@ pipeline {
     }
 
     environment {
-        COMPOSE_PROJECT_NAME = 'devopspractical'
+        COMPOSE_PROJECT_NAME = 'devops-practical'
         DEPLOY_DIR           = '/home/ubuntu/devops-practical'
         COMPOSE_FILES        = '-f docker-compose.yml'
         APP_VERSION          = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
